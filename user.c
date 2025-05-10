@@ -14,6 +14,7 @@ int main(){
     setsockopt(soquete, SOL_SOCKET, SO_RCVTIMEO, (char*) &timeOut, sizeof(timeOut));
     unsigned char buff[200];
     int x = 0;
+    
     //x = recv(soquete, buff, 200, 0);
     //printf("Deu pau %d", x);
     do{
@@ -21,6 +22,7 @@ int main(){
         printf("Deu pau %d\n", x);
         //puts(buff);
     }while(x != -1 && buff[0] != INIT_MASK);
+
     unsigned char cabecalho[4];
     cabecalho[0] = buff[1] >> 1;
     cabecalho[1] = ((buff[1] & 0b00000001) << 4) | (buff[2] >> 4); 

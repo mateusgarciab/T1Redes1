@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <dirent.h>
+
+int main() {
+    DIR *dir;
+    struct dirent *arquivo;
+
+
+    dir = opendir(".");
+    if (dir == NULL) {
+        perror("Impossível abrir diretório");
+        return 1;
+    }
+
+    while ((arquivo = readdir(dir)) != NULL) {
+        printf("%s\n", arquivo->d_name); // Nome do arquivo
+        printf("%d\n", arquivo->d_type); // diretorio ou arquivo, 4 - diretorio  8 - arquivo "normal"
+        printf("%d\n", arquivo->d_reclen); // Supostamente o tamnho, mas não sei do que 
+
+    }
+
+    closedir(dir);
+    return 0;
+}

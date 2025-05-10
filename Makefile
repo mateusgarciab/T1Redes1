@@ -16,7 +16,7 @@ ConexaoRawSocket.o:
 	$(CC) $(CFLAGS) -c ConexaoRawSocket.c 
 
 purge: clean
-	rm -f server user
+	rm -f server user teste arquivo
 
 clean:
 	rm -f $(objects)
