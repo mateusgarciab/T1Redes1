@@ -1,0 +1,3 @@
+
+
+int ConexaoRawSocket(char *device);
