@@ -49,7 +49,7 @@ int main() {
         while ((arquivo = readdir(dir)) != NULL) {
             printf("%s\n", arquivo->d_name); // Nome do arquivo
             printf("%s\n", obterExtensao(arquivo->d_name)); // extensão
-            system("nano objetos/1.txt"); // system executa comandos no terminal, usei o nano pq n sei usar o vi direito e não achei como abrir o editor de texto normal
+            system("nano objetos/1.txt"); // system executa comandos no terminal, usei o nano pq n sei usar o vi direito e não achei como abrir o editor de texto normal   xdg-open file-or-url    libreoffice --writer file.odt
         }
     
         closedir(dir);
