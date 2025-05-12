@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <string.h>
-
 #include <stdlib.h>
 
 #define OBJETOS "objetos\0" /* com \0 ou não ? */

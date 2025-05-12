@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <dirent.h>
+#include <stdlib.h>
 
 int main() {
     DIR *dir;
@@ -20,5 +21,8 @@ int main() {
     }
 
     closedir(dir);
+
+
+    system("ls -l ./objetos");
     return 0;
 }
