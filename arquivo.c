@@ -3,7 +3,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define OBJETOS "objetos\0" /* com \0 ou não ? */
+#define OBJETOS "objetos\0" 
+
+#include "arquivo.h"
 
 char* obterExtensao(char* nomeArquivo) {
     char* ponto = strrchr(nomeArquivo, '.'); // Encontra o último ponto
@@ -14,14 +16,14 @@ char* obterExtensao(char* nomeArquivo) {
     return NULL; // Retorna NULL se não houver ponto
 }
 
-int main() {
+/*int main() {
     DIR *dir;
     struct dirent *arquivo;
 
 
     dir = opendir(".");
     if (dir == NULL) {
-        printf("Impossível abrir diretório"); /* perror ? */
+        printf("Impossível abrir diretório"); 
         return 1;
     }
 
@@ -57,4 +59,4 @@ int main() {
         printf("Não existe diretorio objetos");
     }
     return 0;
-}
+}*/

@@ -2,7 +2,7 @@ CC      = gcc
 CFLAGS  = -Wall
 LDFLAGS = -lm
 
-	objects = ConexaoRawSocket.o mensagem.o arquivo.o rede.o
+	objects = ./obj/ConexaoRawSocket.o ./obj/mensagem.o ./obj/arquivo.o ./obj/rede.o
 
 all: server user
 
@@ -12,20 +12,20 @@ server: server.c $(objects)
 user: user.c $(objects)
 	$(CC) $(CFLAGS) user.c -o user $(objects)
 
-ConexaoRawSocket.o:
-	$(CC) $(CFLAGS) -c ConexaoRawSocket.c 
+./obj/ConexaoRawSocket.o:
+	$(CC) $(CFLAGS) -c ConexaoRawSocket.c -o ./obj/ConexaoRawSocket.o
 
-mensagem.o:
-	$(CC) $(CFLAGS) -c mensagem.c
+./obj/mensagem.o:
+	$(CC) $(CFLAGS) -c mensagem.c -o ./obj/mensagem.o
 
-arquivo.o:
-	$(CC) $(CFLAGS) -c arquivo.c
+./obj/arquivo.o:
+	$(CC) $(CFLAGS) -c arquivo.c -o ./obj/arquivo.o
 
-mapa.o:
-	$(CC) $(CFLAGS) -c mapa.c
+./obj/mapa.o:
+	$(CC) $(CFLAGS) -c mapa.c -o ./obj/mapa.o
 
-rede.o:
-	$(CC) $(CFLAGS) -c rede.c
+./obj/rede.o:
+	$(CC) $(CFLAGS) -c rede.c -o ./obj/rede.o
 
 purge: clean
 	rm -f server user teste arquivo
