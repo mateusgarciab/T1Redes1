@@ -2,8 +2,16 @@
 #include <dirent.h>
 #include <stdlib.h>
 
+#include "mapa.h"
+
 int main() {
-    DIR *dir;
+    tesouro_t t[8];
+    for (int i = 0; i < 8; i++) {
+        t[i].
+    }
+    mapa_t meuMapa = geraMapa()
+
+   /* DIR *dir;
     struct dirent *arquivo;
 
 
@@ -23,6 +31,7 @@ int main() {
     closedir(dir);
 
 
-    system("ls -l ./objetos");
+    system("ls -l ./objetos"); */
+
     return 0;
 }
