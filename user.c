@@ -8,7 +8,7 @@
 #define INIT_MASK 0b01111110
 
 int main(){
-    int soquete = ConexaoRawSocket("eth0"); //eth0 enp2s0 lo:para loop back
+    int soquete = ConexaoRawSocket("enp2s0"); //eth0 enp2s0 lo:para loop back
     const int timeoutMillis = 3000;
     struct timeval timeOut = { .tv_sec = timeoutMillis / 1000, .tv_usec = (timeoutMillis % 1000) * 1000};
     setsockopt(soquete, SOL_SOCKET, SO_RCVTIMEO, (char*) &timeOut, sizeof(timeOut));

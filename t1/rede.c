@@ -1,15 +1,26 @@
-#include "stdlib.h"
+#include "stdlib.h" //n é <> ?
 #include <stdbool.h>
 #include "mensagem.h"
 #include "rede.h"
 
+#include <arpa/inet.h>
+#include <net/ethernet.h>
+#include <linux/if_packet.h>
+#include <net/if.h>
 
+#define TAMBUFF 200
 
 bool aguardaResposta(int soquete, unsigned char *resposta, int timeout){
     int x = 0;
     //seta o tempo de timeout sendo o tempo recebido
+    const int timeoutMillis = 3000;
+    struct timeval timeOut = { .tv_sec = timeoutMillis / 1000, .tv_usec = (timeoutMillis % 1000) * 1000};
+    setsockopt(soquete, SOL_SOCKET, SO_RCVTIMEO, (char*) &timeOut, sizeof(timeOut));
+    unsigned char buff[TAMBUFF];
+    
     do {
         //escutar a rede passando resposta
+        x = recv(soquete, buff, TAMBUFF, 0);
     } while (x != -1 && resposta[0] != MARCADOR_INI);
     if (x == -1)
         return true;
@@ -21,14 +32,17 @@ bool aguardaResposta(int soquete, unsigned char *resposta, int timeout){
 void aguardaMensagem(int soquete, unsigned char *mensagem){
     unsigned char nSeqAux = (getNSeq(mensagem) + 1) % 32;
     int x = 0;
+    unsigned char buff[TAMBUFF];
     while (1) {
         do {
             //escuta a rede
+            x = recv(soquete, buff, TAMBUFF, 0);
         } while (x == -1 || mensagem[0] != MARCADOR_INI);
         if (verificaIntegridade(mensagem))
             return;
         montaMensagem(mensagem, NACK, nSeqAux, NULL, 0);
         //envia mensagem
+        send(soquete, buff, TAMBUFF, 0);
     }
 }
 

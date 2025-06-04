@@ -16,7 +16,7 @@ char* obterExtensao(char* nomeArquivo) {
     return NULL; // Retorna NULL se não houver ponto
 }
 
-/*int main() {
+int main() {
     DIR *dir;
     struct dirent *arquivo;
 
@@ -29,17 +29,19 @@ char* obterExtensao(char* nomeArquivo) {
 
     int existeDir = 0;
     while ((arquivo = readdir(dir)) != NULL && !existeDir) {
-        printf("%s\n", arquivo->d_name); 
-        printf("%d\n", arquivo->d_type); 
+/*         printf("%s\n", arquivo->d_name); 
+        printf("%d\n", arquivo->d_type);  */
 
         // verifica nome e se é um diretorio
         if ((strcmp(arquivo->d_name, OBJETOS) == 0) && (arquivo->d_type == 4)) {
-            printf("entrou\n");
+/*             printf("entrou\n"); */
             existeDir = 1;
         }
     }
     closedir(dir);
 
+    char comando[100];
+    strcat(comando, "xdg-open ");
     if (existeDir) {
         dir = opendir("./objetos");
         if (dir == NULL) {
@@ -49,14 +51,19 @@ char* obterExtensao(char* nomeArquivo) {
     
         while ((arquivo = readdir(dir)) != NULL) {
             printf("%s\n", arquivo->d_name); // Nome do arquivo
-            printf("%s\n", obterExtensao(arquivo->d_name)); // extensão
-            system("nano objetos/1.txt"); // system executa comandos no terminal, usei o nano pq n sei usar o vi direito e não achei como abrir o editor de texto normal   xdg-open file-or-url    libreoffice --writer file.odt
-        }
-    
+            /* printf(" %s\n", obterExtensao(arquivo->d_name)); */ // extensão
+            if (arquivo->d_name[0] != '.') {
+                strcat(comando, arquivo->d_name);
+                /* puts(comando);
+                system(comando);
+                bzero(comando, 100); // limpa comando */
+                strcat(comando, "xdg-open ./objetos/");
+            } // system executa comandos no terminal, usei o nano pq n sei usar o vi direito e não achei como abrir o editor de texto normal   xdg-open file-or-url    libreoffice --writer file.odt
+        }//xdg-open objetos/4.png
         closedir(dir);
 
     } else {
         printf("Não existe diretorio objetos");
     }
     return 0;
-}*/
+}

@@ -12,6 +12,7 @@ void sEnvia(int soquete, tesouro_t *t, unsigned char *mensagem, unsigned char *r
     size_t i, aux;
     //entra no diretorio que contem os arquivos e abre o certo, t->nome so tem o nome do arquivo
     //ou no main quando pegou os nomes dos arquivos ja fica dentro do diretorio onde eles tao
+    
     FILE *arq = fopen((char *)t->nome, "r");
     if (!arq) {
         fprintf(stderr, "Erro ao abrir o arquivo %s\n", t->nome);

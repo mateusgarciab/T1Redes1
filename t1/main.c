@@ -7,7 +7,64 @@
 #include "servidor.h"
 #include "cliente.h"
 
+#include <dirent.h>
+#include <string.h>
+#define OBJETOS "objetos\0" 
 
+/* char* obterExtensao(char* nomeArquivo) {
+    char* ponto = strrchr(nomeArquivo, '.'); // Encontra o último ponto
+    if (ponto)
+        return ponto + 1; // Retorna a string a partir do ponto
+
+    return NULL; // Retorna NULL se não houver ponto
+} */
+
+void abreArquivos(){
+    DIR *dir;
+    struct dirent *arquivo;
+
+    dir = opendir(".");
+    if (dir == NULL) {
+        printf("Impossível abrir diretório"); 
+        return 1;
+    }
+    int existeDir = 0;
+    while ((arquivo = readdir(dir)) != NULL && !existeDir) {
+/*         printf("%s\n", arquivo->d_name); 
+        printf("%d\n", arquivo->d_type);  */
+        // verifica nome e se é um diretorio
+        if ((strcmp(arquivo->d_name, OBJETOS) == 0) && (arquivo->d_type == 4)) {
+/*             printf("entrou\n"); */
+            existeDir = 1;
+        }
+    }
+    closedir(dir);
+
+    char comando[100];
+    strcat(comando, "xdg-open ");
+    if (existeDir) {
+        dir = opendir("./objetos");
+        if (dir == NULL) {
+            printf("Impossível abrir diretório");
+            return 1;
+        }
+        while ((arquivo = readdir(dir)) != NULL) {
+            printf("%s\n", arquivo->d_name); // Nome do arquivo
+            /* printf(" %s\n", obterExtensao(arquivo->d_name)); */ // extensão
+            if (arquivo->d_name[0] != '.') {
+                strcat(comando, arquivo->d_name);
+                /* puts(comando);
+                system(comando);
+                bzero(comando, 100); // limpa comando */
+                strcat(comando, "xdg-open ./objetos/");
+            } 
+        }//xdg-open objetos/4.png
+        closedir(dir);
+
+    } else
+        printf("Não existe diretorio objetos");
+    return;
+}
 
 void iniciaServidor(int soquete, unsigned char *mensagem, unsigned char *resposta){
     tesouro_t *tesouros = malloc(sizeof(tesouro_t)*8);
@@ -60,7 +117,7 @@ void inicializaCliente(int soquete, unsigned char *mensagem, unsigned char *resp
 
 
 int main(int argc, char *argv[]){
-    int soquete;
+    int soquete = ConexaoRawSocket("eth0");;
     //Cria o soquete
     unsigned char *mensagem = malloc(sizeof(unsigned char)*131);
     unsigned char *resposta = malloc(sizeof(unsigned char)*131);
