@@ -6,6 +6,9 @@
 #include "mapa.h"
 #include "rede.h"
 
+#include <string.h>
+#include <sys/statvfs.h>
+
 
 
 int cEnvia(int soquete, img_mapa_t *m, unsigned char *mensagem, unsigned char *resposta){
@@ -59,15 +62,26 @@ int cEnvia(int soquete, img_mapa_t *m, unsigned char *mensagem, unsigned char *r
     return flag;
 }
 
+void executaArq(unsigned char *nome) {
+    char comando[136];
+    strcat(comando, "xdg-open ");
+    strcat(comando, (char*)nome);
+    system(comando);
+}
+
+unsigned long long int getEspacoLivre() {
+    struct statvfs dado;
+    statvfs(".", &dado);
+    return dado.f_bsize*dado.f_bavail;
+}
+
 bool cRecebe(int soquete, unsigned char *mensagem, unsigned char *resposta){
     unsigned char *nome = malloc(sizeof(unsigned char)*127);
     unsigned char *dados = malloc(sizeof(unsigned char)*127);
     FILE *arq;
     unsigned char tam;
-    unsigned char tamNome;
     unsigned long long int tamArq;
-    unsigned long long int espacoLivre;// = getEspacoLivre();
-    // retorna quandos bytes tem disponivel no disco;
+    unsigned long long int espacoLivre = getEspacoLivre();
     unsigned char nSeqAux = 32;
     do {
         switch (getTipo(mensagem)) {
@@ -98,7 +112,7 @@ bool cRecebe(int soquete, unsigned char *mensagem, unsigned char *resposta){
             case TEXTO:
             case VIDEO:
             case IMAGEM:
-                tamNome = getDados(mensagem, nome);
+                getDados(mensagem, nome);
                 montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
                 break;
             case FIM_ARQ:
@@ -106,7 +120,7 @@ bool cRecebe(int soquete, unsigned char *mensagem, unsigned char *resposta){
                 trocaPapeis(soquete, mensagem, resposta);
                 fclose(arq);
                 printf("Transferencia concluída, abrindo\n");
-                //Executa/abre o arquivo
+                executaArq(nome);
                 free(nome);
                 return true;
             case END_GAME:
@@ -114,7 +128,7 @@ bool cRecebe(int soquete, unsigned char *mensagem, unsigned char *resposta){
                 trocaPapeis(soquete, mensagem, resposta);
                 fclose(arq);
                 printf("Transferencia concluída, abrindo\n");
-                //Executa/abre o arquivo
+                executaArq(nome);
                 free(nome);
                 return false;
         }

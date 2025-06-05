@@ -10,60 +10,50 @@
 #include <dirent.h>
 #include <string.h>
 #define OBJETOS "objetos\0" 
+#include "ConexaoRawSocket.h"
 
-/* char* obterExtensao(char* nomeArquivo) {
+char* obterExtensao(char* nomeArquivo) {
     char* ponto = strrchr(nomeArquivo, '.'); // Encontra o último ponto
     if (ponto)
         return ponto + 1; // Retorna a string a partir do ponto
 
     return NULL; // Retorna NULL se não houver ponto
-} */
+}
 
-void abreArquivos(){
+void pegaTesouros(tesouro_t *tesouros){
     DIR *dir;
     struct dirent *arquivo;
-
-    dir = opendir(".");
+    struct stat dados;
+    dir = opendir("./objetos");
     if (dir == NULL) {
-        printf("Impossível abrir diretório"); 
-        return 1;
+        printf("Impossível abrir diretório");
+        exit(1);
     }
-    int existeDir = 0;
-    while ((arquivo = readdir(dir)) != NULL && !existeDir) {
-/*         printf("%s\n", arquivo->d_name); 
-        printf("%d\n", arquivo->d_type);  */
-        // verifica nome e se é um diretorio
-        if ((strcmp(arquivo->d_name, OBJETOS) == 0) && (arquivo->d_type == 4)) {
-/*             printf("entrou\n"); */
-            existeDir = 1;
-        }
+    int i = 0; 
+    char *aux;
+    while ((arquivo = readdir(dir)) != NULL) {
+        if (arquivo->d_name[0] != '.') {
+            tesouros[i].nome = (unsigned char *)strdup(arquivo->d_name);
+            stat((char *)tesouros[i].nome, &dados);
+            tesouros[i].tamanho = dados.st_size;
+            tesouros[i].achado = false;
+            aux = obterExtensao((char *)tesouros[i].nome);
+            switch (aux[1]){
+                case 't':
+                    tesouros[i].tipo = 6;
+                    break;
+                case 'm':
+                    tesouros[i].tipo = 7;
+                    break;
+                case 'j':
+                    tesouros[i].tipo = 8;
+                    break;
+            }   
+            tesouros[i].tamNome = strlen((char *)tesouros[i].nome)+1;
+            i++;
+        } 
     }
     closedir(dir);
-
-    char comando[100];
-    strcat(comando, "xdg-open ");
-    if (existeDir) {
-        dir = opendir("./objetos");
-        if (dir == NULL) {
-            printf("Impossível abrir diretório");
-            return 1;
-        }
-        while ((arquivo = readdir(dir)) != NULL) {
-            printf("%s\n", arquivo->d_name); // Nome do arquivo
-            /* printf(" %s\n", obterExtensao(arquivo->d_name)); */ // extensão
-            if (arquivo->d_name[0] != '.') {
-                strcat(comando, arquivo->d_name);
-                /* puts(comando);
-                system(comando);
-                bzero(comando, 100); // limpa comando */
-                strcat(comando, "xdg-open ./objetos/");
-            } 
-        }//xdg-open objetos/4.png
-        closedir(dir);
-
-    } else
-        printf("Não existe diretorio objetos");
-    return;
 }
 
 void iniciaServidor(int soquete, unsigned char *mensagem, unsigned char *resposta){
@@ -72,9 +62,7 @@ void iniciaServidor(int soquete, unsigned char *mensagem, unsigned char *respost
         fprintf(stderr, "Erro alocando memoria para nomes, encrrando\n");
         exit(1);
     }
-    //Colocar aqui o codigo pra pegar os nomes, tamNome (acredito que e so dar
-    //um strlen(nome)), tamanho e tipo dos arquivos pra preencher os campos de
-    //cada estrutura tesouro, o campo achado é sempre false;
+    pegaTesouros(tesouros);
     mapa_t *mapa = geraMapa(tesouros);
     if (!mapa) {
         fprintf(stderr, "Erro ao carregar mapa, encerrando\n");

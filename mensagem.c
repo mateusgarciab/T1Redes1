@@ -76,7 +76,7 @@ int setDados(unsigned char *mensagem, unsigned char *dados, int tam){
     return tamInserido;
 }
 
-void getDados(unsigned char *mensagem, unsigned char *dados){
+unsigned char getDados(unsigned char *mensagem, unsigned char *dados){
     unsigned char tam = getTam(mensagem);
     unsigned char numPadding = 0;
     for (unsigned char i = 0; i < tam; i++) {
@@ -86,6 +86,7 @@ void getDados(unsigned char *mensagem, unsigned char *dados){
             numPadding++;
         }
     }
+    return tam - numPadding;
 }
 
 int montaMensagem(unsigned char *mensagem, int tipo, unsigned char nSeq, void *dados, unsigned char tam){
@@ -115,7 +116,7 @@ int montaMensagem(unsigned char *mensagem, int tipo, unsigned char nSeq, void *d
         case START_GAME:
             setMarcadorIni(mensagem);
             if (dados) {
-                dadosInseridos = setDados(mensagem, dados, 3);
+                dadosInseridos = setDados(mensagem, (unsigned char *)dados, 3);
                 setTam(mensagem, 3);
             }else{
                 setTam(mensagem, 0);
@@ -126,7 +127,7 @@ int montaMensagem(unsigned char *mensagem, int tipo, unsigned char nSeq, void *d
             break;
         case TAMANHO: //e em bytes? qual o valor de tam? 4?
             setMarcadorIni(mensagem);
-            dadosInseridos = setDados(mensagem, dados, 8);
+            dadosInseridos = setDados(mensagem, (unsigned char *)dados, 8);
             setTam(mensagem, 8);
             setNSeq(mensagem, nSeq);
             setTipo(mensagem, tipo);

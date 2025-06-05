@@ -81,7 +81,7 @@
  *    15 - ERRO:
  *          Contém um código que indica o erro,
  *          0 indica a fata de permissão
- *          1 indica espaço insificiente
+ *          1 indica espaço insuficiente
  */
 
 #ifndef MENSAGEM_H
@@ -157,8 +157,8 @@ void checkSum(unsigned char *mensagem);
 /* Recebe um ponteiro mensagem para um vetor unsigned char de 131 bytes
  * seguindo o template definido no inicio desse arquivo e um ponteiro dados
  * para um vetor unsigned char de 127 bytes e copia o sexto campo (Dados) da
- * mensagem para o vetor dados recebido */
-void getDados(unsigned char *mensagem, unsigned char *dados);
+ * mensagem para o vetor dados recebido e retorna o numero de bytes copiados */
+unsigned char getDados(unsigned char *mensagem, unsigned char *dados);
 
 /* Recebe um ponteiro mensagem para um vetor unsigned char de 131 bytes
  * seguindo o template definido no inicio desse arquivo e um ponteiro dados

@@ -2,33 +2,33 @@ CC      = gcc
 CFLAGS  = -Wall
 LDFLAGS = -lm
 
-	objects = ./obj/ConexaoRawSocket.o ./obj/mensagem.o ./obj/arquivo.o ./obj/rede.o
+	objects = ConexaoRawSocket.o mensagem.o rede.o mapa.o cliente.o servidor.o
 
-all: server user
+all: main user
 
-server: server.c $(objects)
-	$(CC) $(CFLAGS) server.c -o server $(objects) $(LDFLAGS)
+main: main.c $(objects)
+	$(CC) $(CFLAGS) main.c -o main $(objects) $(LDFLAGS)
 
-user: user.c $(objects)
-	$(CC) $(CFLAGS) user.c -o user $(objects)
+ConexaoRawSocket.o:
+	$(CC) $(CFLAGS) -c ConexaoRawSocket.c -o ConexaoRawSocket.o
 
-./obj/ConexaoRawSocket.o:
-	$(CC) $(CFLAGS) -c ConexaoRawSocket.c -o ./obj/ConexaoRawSocket.o
+mensagem.o:
+	$(CC) $(CFLAGS) -c mensagem.c -o mensagem.o
 
-./obj/mensagem.o:
-	$(CC) $(CFLAGS) -c mensagem.c -o ./obj/mensagem.o
+mapa.o:
+	$(CC) $(CFLAGS) -c mapa.c -o mapa.o
 
-./obj/arquivo.o:
-	$(CC) $(CFLAGS) -c arquivo.c -o ./obj/arquivo.o
+rede.o:
+	$(CC) $(CFLAGS) -c rede.c -o rede.o
 
-./obj/mapa.o:
-	$(CC) $(CFLAGS) -c mapa.c -o ./obj/mapa.o
+cliente.o:
+	$(CC) $(CFLAGS) -c cliente.c -o cliente.o
 
-./obj/rede.o:
-	$(CC) $(CFLAGS) -c rede.c -o ./obj/rede.o
+servidor.o:
+	$(CC) $(CFLAGS) -c servidor.c -o servidor.o
 
 purge: clean
-	rm -f server user teste arquivo
+	rm -f main user teste arquivo
 
 clean:
 	rm -f $(objects)

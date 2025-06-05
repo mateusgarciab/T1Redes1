@@ -47,6 +47,7 @@ mapa_t *geraMapa(tesouro_t *tesouros){
         } while (m->mapa[j][k].t != NULL);
         m->mapa[j][k].t = &tesouros[i];
     }
+    m->tesourosRestantes = 8;
     //Posiciona o jogador em uma posicao aleatoria no mapa
     m->posAtual = &m->mapa[rand() % 8][rand() % 8];
     m->posInicial = m->posAtual;
@@ -56,43 +57,45 @@ mapa_t *geraMapa(tesouro_t *tesouros){
 bool moveUp(mapa_t *M){
     if (!M->posAtual->up)
         return false;
-    M->posAtual->prox = M->posAtual->up;
     M->posAtual = M->posAtual->up;
+    printf("[%d, %d]", (int) M->posAtual->linha, (int) M->posAtual->coluna);
+    if (M->posAtual->t)
+        printf("\tTesouro");
+    printf("\n");
     return true;
 }
 
 bool moveDown(mapa_t *M){
     if (!M->posAtual->down)
         return false;
-    M->posAtual->prox = M->posAtual->down;
     M->posAtual = M->posAtual->down;
+    printf("[%d, %d]", (int) M->posAtual->linha, (int) M->posAtual->coluna);
+    if (M->posAtual->t)
+        printf("\tTesouro");
+    printf("\n");
     return true;
 }
 
 bool moveLeft(mapa_t *M){
     if (!M->posAtual->left)
         return false;
-    M->posAtual->prox = M->posAtual->left;
     M->posAtual = M->posAtual->left;
+    printf("[%d, %d]", (int) M->posAtual->linha, (int) M->posAtual->coluna);
+    if (M->posAtual->t)
+        printf("\tTesouro");
+    printf("\n");
     return true;
 }
 
 bool moveRight(mapa_t *M){
     if (!M->posAtual->right)
         return false;
-    M->posAtual->prox = M->posAtual->right;
     M->posAtual = M->posAtual->right;
+    printf("[%d, %d]", (int) M->posAtual->linha, (int) M->posAtual->coluna);
+    if (M->posAtual->t)
+        printf("\tTesouro");
+    printf("\n");
     return true;
-}
-
-void imprimeCaminho(mapa_t *M){
-    pos_t *aux = M->posInicial;
-    while (aux) {
-        printf("[%d, %d]", (int) aux->linha, (int) aux->coluna);
-        if (aux->t)
-            printf("\tTesouro");
-        printf("\n");
-    }
 }
 
 img_mapa_t *geraImgMapa(){
@@ -104,6 +107,16 @@ img_mapa_t *geraImgMapa(){
     for (int i = 0; i < 8; i++)
         mapaI->M[i] = &mapaI->pos[i*8];
     return mapaI;
+}
+
+bool setPosInic(img_mapa_t *mapa, unsigned char x, unsigned char y, bool flag){
+    mapa->x = x;
+    mapa->y = y;
+    if (flag)
+        mapa->M[mapa->x][mapa->y] = 'o';
+    else
+        mapa->M[mapa->x][mapa->y] = 'F';
+    return flag;
 }
 
 void moveImgUp(img_mapa_t *mapa, bool flag){
@@ -147,7 +160,7 @@ void moveImgRight(img_mapa_t *mapa, bool flag){
 }
 
 void imprimeImgMapa(img_mapa_t *mapa){
-    printf("|-----------------|");
+    printf("|-----------------|\n");
     for (int i = 0; i < 64; i+=8) {
         printf("| ");
         printf("%c %c %c %c %c %c %c %c ", mapa->pos[i], mapa->pos[i+1],
@@ -155,5 +168,5 @@ void imprimeImgMapa(img_mapa_t *mapa){
                 mapa->pos[i+6], mapa->pos[i+7]);
         printf("|\n");
     }
-    printf("|-----------------|");
+    printf("|-----------------|\n");
 }

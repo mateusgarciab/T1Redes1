@@ -25,8 +25,8 @@ typedef struct IMAGEM_MAPA {
 } img_mapa_t;
 
 typedef struct TESOURO {
-    char *nome;
-    unsigned int tamNome;
+    unsigned char *nome;
+    unsigned char tamNome;
     int tipo;
     unsigned long long int tamanho;
     bool achado;
@@ -40,11 +40,10 @@ typedef struct POS {
     struct POS *left;
     struct POS *down;
     struct POS *right;
-    struct POS *prox;
-    struct POS *ant;
 } pos_t;
 
 typedef struct MAPA {
+    int tesourosRestantes;
     pos_t *posAtual;
     pos_t *posInicial;
     pos_t *mapa[8];
@@ -81,9 +80,12 @@ bool moveLeft(mapa_t *M);
  * e retorna true, retorna false caso contrario */
 bool moveRight(mapa_t *M);
 
-/* Recebe um ponteiro M para uma estrutura mapa_t e imprime a partir da posicao
- * inicial todas as posicoes que o jogador percorreu */
-void imprimeCaminho(mapa_t *M);
+/* Recebe um ponteiro mapa para a estrutura img_mapa_t, dois unsigned char x e y
+ * representando as coordenadas, respectivamente linha e coluna, da posicao
+ * inicial do jogador e uma flag indicando se existe um tesouro nessa posicao,
+ * preeenche a posicao x, y da representacao grafica do mapa com os simbolos
+ * corretos comforme o exemplo, retorna a flag passada */
+bool setPosInic(img_mapa_t *mapa, unsigned char x, unsigned char y, bool flag);
 
 /* Recebe um ponteiro mapa para a estrutura img_mapa_t e uma flag indicando se
  * a casa acima da posicao atual possui um tesouro e move a posicao atual na
