@@ -148,6 +148,7 @@ void rodaServidor(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char
     printf("\n");
     while (rodando) {
         sRecebe(soquete, M, mensagem, resposta);
+        printf("Server recebeu e vai mandar \n");
         sEnvia(soquete, M->posAtual->t, mensagem, resposta);
         M->tesourosRestantes--;
         if (M->tesourosRestantes) {

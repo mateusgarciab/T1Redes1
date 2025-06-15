@@ -20,6 +20,7 @@ bool aguardaResposta(int soquete, unsigned char *resposta, int timeout){
     
     do {
         //escutar a rede passando resposta
+        printf("Agurdando Resposta\n");
         x = recv(soquete, resposta, TAMBUFF, 0);
     } while (x != -1 && resposta[0] != MARCADOR_INI);
     if (x == -1)
@@ -49,6 +50,7 @@ void enviaMensEsperaResp(int soquete, unsigned char *mensagem, unsigned char *re
     bool timeOutFlag = false;
     do {
         //envia mensagem
+        printf("Enviando mensagem\n");
         send(soquete, mensagem, TAMBUFF, 0);
         timeOutFlag = aguardaResposta(soquete, resposta, timeout);
         if (timeOutFlag) {
@@ -64,6 +66,7 @@ void enviaMensEsperaResp(int soquete, unsigned char *mensagem, unsigned char *re
 
 void enviaRespEsperaMens(int soquete, unsigned char *mensagem, unsigned char *resposta){
     //envia resposta
+    printf("enviando Resposta e espera msg \n");
     send(soquete, resposta, TAMBUFF, 0);
     aguardaMensagem(soquete, mensagem);
 }

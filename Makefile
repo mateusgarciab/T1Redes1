@@ -4,7 +4,7 @@ LDFLAGS = -lm
 
 	objects = ConexaoRawSocket.o mensagem.o rede.o mapa.o cliente.o servidor.o
 
-all: main user
+all: main 
 
 main: main.c $(objects)
 	$(CC) $(CFLAGS) main.c -o main $(objects) $(LDFLAGS)

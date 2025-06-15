@@ -34,6 +34,7 @@ void pegaTesouros(tesouro_t *tesouros){
     while ((arquivo = readdir(dir)) != NULL) {
         if (arquivo->d_name[0] != '.') {
             tesouros[i].nome = (unsigned char *)strdup(arquivo->d_name);
+            puts(tesouros[i].nome);
             stat((char *)tesouros[i].nome, &dados);
             tesouros[i].tamanho = dados.st_size;
             tesouros[i].achado = false;
@@ -63,7 +64,9 @@ void iniciaServidor(int soquete, unsigned char *mensagem, unsigned char *respost
         exit(1);
     }
     pegaTesouros(tesouros);
+    printf("Tesouro pegos\n");
     mapa_t *mapa = geraMapa(tesouros);
+    printf("Mapa gerado\n");
     if (!mapa) {
         fprintf(stderr, "Erro ao carregar mapa, encerrando\n");
         exit(1);
@@ -105,7 +108,7 @@ void inicializaCliente(int soquete, unsigned char *mensagem, unsigned char *resp
 
 
 int main(int argc, char *argv[]){
-    int soquete = ConexaoRawSocket("eth0");;
+    int soquete = ConexaoRawSocket("enp2s0");;
     //Cria o soquete
     unsigned char *mensagem = malloc(sizeof(unsigned char)*131);
     unsigned char *resposta = malloc(sizeof(unsigned char)*131);
@@ -115,9 +118,11 @@ int main(int argc, char *argv[]){
     }
     switch (getopt(argc, argv, "sc")) {
         case 's':
+            printf("Inicia servidor\n");
             iniciaServidor(soquete, mensagem, resposta);
             break;
         case 'c':
+            printf("Inicia Cliente\n");
             inicializaCliente(soquete, mensagem, resposta);
             break;
         default:
