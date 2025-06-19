@@ -60,6 +60,7 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
         aguardaMensagem(soquete, mensagem);
     }
     while (1) {
+        printf("Recebeu mensagem %d\n", getTipo(mensagem));
         switch (getTipo(mensagem)) {
             case ACK:
                 montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
@@ -134,6 +135,7 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
             return;
         }
         numSeqAux = getNSeq(mensagem);
+        printf("Enviando resposta %d\n", getTipo(resposta));
         do {
             enviaRespEsperaMens(soquete, mensagem, resposta);
         } while (getNSeq(mensagem) == numSeqAux);

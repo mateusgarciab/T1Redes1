@@ -64,6 +64,7 @@ int cEnvia(int soquete, img_mapa_t *m, unsigned char *mensagem, unsigned char *r
 
 void executaArq(unsigned char *nome) {
     char comando[136];
+    comando[0] = '\0';
     strcat(comando, "xdg-open ");
     strcat(comando, (char*)nome);
     system(comando);
@@ -145,7 +146,7 @@ void rodaCliente(int soquete, img_mapa_t *m, unsigned char *mensagem, unsigned c
     unsigned char nSeq = 0;
     unsigned char *dados = malloc(sizeof(unsigned char)*127);
     montaMensagem(mensagem, START_GAME, nSeq, NULL, 0);
-    puts(mensagem);
+    printf("Enviando mensagem de tipo %d\n", getTipo(mensagem));
     enviaMensEsperaResp(soquete, mensagem, resposta);
     getDados(resposta, dados);
     if (setPosInic(m, dados[0], dados[1], dados[2]))

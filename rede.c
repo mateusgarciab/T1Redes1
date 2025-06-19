@@ -8,13 +8,14 @@
 #include <linux/if_packet.h>
 #include <net/if.h>
 #include "ConexaoRawSocket.h"
+#include <stdio.h>
 
 #define TAMBUFF 131
 
 bool aguardaResposta(int soquete, unsigned char *resposta, int timeout){
     int x = 0;
     //seta o tempo de timeout sendo o tempo recebido
-    const int timeoutMillis = 3000;
+    const int timeoutMillis = timeout;
     struct timeval timeOut = { .tv_sec = timeoutMillis / 1000, .tv_usec = (timeoutMillis % 1000) * 1000};
     setsockopt(soquete, SOL_SOCKET, SO_RCVTIMEO, (char*) &timeOut, sizeof(timeOut));
     
@@ -45,7 +46,7 @@ void aguardaMensagem(int soquete, unsigned char *mensagem){
 }
 
 void enviaMensEsperaResp(int soquete, unsigned char *mensagem, unsigned char *resposta){
-    int timeout = 0; //colocar o tempo inicial
+    int timeout = 3000; //colocar o tempo inicial
     int numTimeout = 0;
     bool timeOutFlag = false;
     do {
