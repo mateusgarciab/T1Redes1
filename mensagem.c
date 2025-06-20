@@ -54,7 +54,7 @@ void checkSum(unsigned char *mensagem){
     unsigned char tam = getTam(mensagem);
     if (tam) {
         for (unsigned char i = 0; i < tam; i++)
-            soma += mensagem[i];
+            soma += mensagem[i+4];
     }
     mensagem[3] = soma;
 }

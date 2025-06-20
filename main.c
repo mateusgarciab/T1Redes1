@@ -3,6 +3,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <getopt.h>
+#include <time.h>
 #include "mapa.h"
 #include "servidor.h"
 #include "cliente.h"
@@ -108,7 +109,8 @@ void inicializaCliente(int soquete, unsigned char *mensagem, unsigned char *resp
 
 
 int main(int argc, char *argv[]){
-    int soquete = ConexaoRawSocket("enp2s0");;
+    int soquete = ConexaoRawSocket("enp2s0");
+    srand(time(NULL));
     //Cria o soquete
     unsigned char *mensagem = malloc(sizeof(unsigned char)*131);
     unsigned char *resposta = malloc(sizeof(unsigned char)*131);
