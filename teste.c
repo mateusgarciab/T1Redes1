@@ -6,13 +6,17 @@
 #include <net/ethernet.h>
 #include <linux/if_packet.h>
 #include <net/if.h>
+#include "cliente.h"
+#include <sys/statvfs.h>
+
+unsigned long long int getEspacoLivre() {
+    struct statvfs dado;
+    statvfs(".", &dado);
+    return dado.f_bsize*dado.f_bavail;
+}
 
 int main() {
-    char escolha;
-    while (1) {
-        scanf("%2c", &escolha);
-        printf("escolha %c\n", escolha);
-    }
+    printf("%lld\n", getEspacoLivre());
         
 
 

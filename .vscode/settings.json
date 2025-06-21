@@ -60,5 +60,6 @@
     "if_packet.h": "c",
     "ethernet.h": "c",
     "stdio.h": "c"
-  }
+  },
+  "C_Cpp.errorSquiggles": "enabled"
 }

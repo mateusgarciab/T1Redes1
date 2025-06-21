@@ -85,6 +85,7 @@ bool cRecebe(int soquete, unsigned char *mensagem, unsigned char *resposta){
     unsigned long long int espacoLivre = getEspacoLivre();
     unsigned char nSeqAux = 32;
     do {
+        printf("CRecebe %d\n", getTipo(mensagem));
         switch (getTipo(mensagem)) {
             case START_GAME:
                 montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);

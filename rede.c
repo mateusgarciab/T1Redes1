@@ -46,12 +46,12 @@ void aguardaMensagem(int soquete, unsigned char *mensagem){
 }
 
 void enviaMensEsperaResp(int soquete, unsigned char *mensagem, unsigned char *resposta){
-    int timeout = 3000; //colocar o tempo inicial
+    int timeout = 30; //colocar o tempo inicial
     int numTimeout = 0;
     bool timeOutFlag = false;
     do {
         //envia mensagem
-        printf("Enviando mensagem\n");
+        printf("Enviando mensagem %d\n", getTipo(mensagem));
         send(soquete, mensagem, TAMBUFF, 0);
         timeOutFlag = aguardaResposta(soquete, resposta, timeout);
         if (timeOutFlag) {
