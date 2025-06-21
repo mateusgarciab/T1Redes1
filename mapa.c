@@ -162,7 +162,7 @@ void moveImgRight(img_mapa_t *mapa, bool flag){
 
 void imprimeImgMapa(img_mapa_t *mapa){
     printf("|-----------------|\n");
-    for (int i = 0; i < 64; i+=8) {
+    for (int i = 56; i >= 0; i-=8) {
         printf("| ");
         printf("%c %c %c %c %c %c %c %c ", mapa->pos[i], mapa->pos[i+1],
                 mapa->pos[i+2], mapa->pos[i+3], mapa->pos[i+4], mapa->pos[i+5],

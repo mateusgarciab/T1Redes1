@@ -8,7 +8,16 @@
 #include <net/if.h>
 
 int main() {
-    printf("\nm manda r recebe ");
+    char escolha;
+    while (1) {
+        scanf("%2c", &escolha);
+        printf("escolha %c\n", escolha);
+    }
+        
+
+
+
+    /* printf("\nm manda r recebe ");
     char letra;
 
     scanf("%s", &letra);
@@ -25,5 +34,5 @@ int main() {
             x = recv(soquete, buff, 131, 0);
             puts(buff);
         } while (x != -1);
-    }
+    } */
 }

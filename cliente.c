@@ -13,13 +13,13 @@
 
 int cEnvia(int soquete, img_mapa_t *m, unsigned char *mensagem, unsigned char *resposta){
     int flag = 1;
-    char escolha;
+    char escolha [2];
     bool temTesouro = false;
     unsigned char nSeq = (getNSeq(mensagem) + 1) % 32;
     while (flag) {
         imprimeImgMapa(m);
-        scanf("%1c", &escolha);
-        switch (escolha) {
+        scanf("%s", escolha);
+        switch (escolha[0]) {
             case 'w':
                 montaMensagem(mensagem, MOV_UP, nSeq, NULL, 0);
                 break;
