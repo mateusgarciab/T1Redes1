@@ -26,6 +26,7 @@ bool aguardaResposta(int soquete, unsigned char *resposta, int timeout){
     } while (x != -1 && resposta[0] != MARCADOR_INI);
     if (x == -1)
         return true;
+    printf("Recebido %d\n", getTipo(resposta));
     return false;
 }
 
@@ -35,10 +36,13 @@ void aguardaMensagem(int soquete, unsigned char *mensagem){
     while (1) {
         do {
             //escuta a rede
+            printf("Agurdando Mensagem\n");
             x = recv(soquete, mensagem, TAMBUFF, 0);
         } while (x == -1 || mensagem[0] != MARCADOR_INI);
-        if (verificaIntegridade(mensagem))
+        if (verificaIntegridade(mensagem)) {
+            printf("Recebido %d\n", getTipo(mensagem));
             return;
+        }
         montaMensagem(mensagem, NACK, nSeqAux, NULL, 0);
         //envia mensagem
         send(soquete, mensagem, TAMBUFF, 0);
@@ -46,7 +50,7 @@ void aguardaMensagem(int soquete, unsigned char *mensagem){
 }
 
 void enviaMensEsperaResp(int soquete, unsigned char *mensagem, unsigned char *resposta){
-    int timeout = 30; //colocar o tempo inicial
+    int timeout = 15; //colocar o tempo inicial
     int numTimeout = 0;
     bool timeOutFlag = false;
     do {

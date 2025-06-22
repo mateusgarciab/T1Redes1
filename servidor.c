@@ -78,6 +78,7 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
                 break;
             case MOV_RIGHT:
                 if (!moveRight(M)) {
+                    printf("Sera qu é aqui, !mov");
                     montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
                     break;
                 }
@@ -91,6 +92,7 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
                 break;
             case MOV_UP:
                 if (!moveUp(M)) {
+                    printf("Sera qu é aqui, !mov");
                     montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
                     break;
                 }
@@ -104,6 +106,7 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
                 break;
             case MOV_DOWN:
                 if (!moveDown(M)) {
+                    printf("Sera qu é aqui, !mov");
                     montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
                     break;
                 }
@@ -117,6 +120,7 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
                 break;
             case MOV_LEFT:
                 if (!moveLeft(M)) {
+                    printf("Sera qu é aqui, !mov");
                     montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
                     break;
                 }

@@ -17,6 +17,7 @@ int cEnvia(int soquete, img_mapa_t *m, unsigned char *mensagem, unsigned char *r
     bool temTesouro = false;
     unsigned char nSeq = (getNSeq(mensagem) + 1) % 32;
     while (flag) {
+        printf("Mapa cEnvia\n");
         imprimeImgMapa(m);
         scanf("%s", escolha);
         switch (escolha[0]) {
@@ -37,8 +38,10 @@ int cEnvia(int soquete, img_mapa_t *m, unsigned char *mensagem, unsigned char *r
         }
         nSeq = (nSeq + 1) % 32;
         enviaMensEsperaResp(soquete, mensagem, resposta);
-        if (getTipo(resposta) == ACK)
+        if (getTipo(resposta) == ACK) {
+            printf("Aqui Ack\n"); 
             continue;
+        }
         if (getTipo(resposta) == TEXTO || getTipo(resposta) == VIDEO ||
             getTipo(resposta) == IMAGEM){
             temTesouro = true;
@@ -155,9 +158,11 @@ void rodaCliente(int soquete, img_mapa_t *m, unsigned char *mensagem, unsigned c
     free(dados);
     while (rodando) {
         if (flag){
+            printf("If\n");
             flag = cEnvia(soquete, m, mensagem, resposta);
             continue;
         } else {
+            printf("Else\n");
             imprimeImgMapa(m);
             printf("Tesouro achado, aguardando transferencia\n");
             rodando = cRecebe(soquete, resposta, mensagem);
