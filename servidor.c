@@ -1,26 +1,36 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "servidor.h"
 #include "mapa.h"
 #include "rede.h"
 #include "mensagem.h"
 
+char *concatenaNomeTesouro(tesouro_t *t) {
+    char nome[150];
+    nome[0] = '\0';
+    strcat(nome, "objetos/");
+    strcat(nome, (char*)t->nome);
 
+    return strdup(nome);
+}
 
 void sEnvia(int soquete, tesouro_t *t, unsigned char *mensagem, unsigned char *resposta){
     size_t i, aux;
     //entra no diretorio que contem os arquivos e abre o certo, t->nome so tem o nome do arquivo
     //ou no main quando pegou os nomes dos arquivos ja fica dentro do diretorio onde eles tao
-    
-    FILE *arq = fopen((char *)t->nome, "r");
+    printf("%s\n", t->nome);
+    FILE *arq = fopen(concatenaNomeTesouro(t), "r");
     if (!arq) {
         fprintf(stderr, "Erro ao abrir o arquivo %s\n", t->nome);
         exit(1);
     }
+    printf("Arquivo aberto\n");
     unsigned char nSeq = (getNSeq(mensagem) + 1) % 32;
     unsigned char *dados = malloc(sizeof(unsigned char)*127);
     if (getTipo(resposta) == START_GAME) {
+        printf("*************************************************************** %d\n", t->tipo);
         montaMensagem(mensagem, t->tipo, nSeq, t->nome, t->tamNome);
         nSeq = (nSeq +1) % 32;
         enviaMensEsperaResp(soquete, mensagem, resposta);
@@ -63,6 +73,7 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
         printf("Recebeu mensagem %d\n", getTipo(mensagem));
         switch (getTipo(mensagem)) {
             case ACK:
+                printf("Ack crecebe\n");
                 montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
                 break;
             case START_GAME:

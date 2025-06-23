@@ -70,6 +70,7 @@ void executaArq(unsigned char *nome) {
     comando[0] = '\0';
     strcat(comando, "xdg-open ");
     strcat(comando, (char*)nome);
+    printf("%s\n", comando);
     system(comando);
 }
 

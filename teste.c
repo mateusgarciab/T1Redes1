@@ -5,38 +5,15 @@
 #include <arpa/inet.h>
 #include <net/ethernet.h>
 #include <linux/if_packet.h>
+#include <stdlib.h>
 #include <net/if.h>
 #include "cliente.h"
 #include <sys/statvfs.h>
 
-unsigned long long int getEspacoLivre() {
-    struct statvfs dado;
-    statvfs(".", &dado);
-    return dado.f_bsize*dado.f_bavail;
-}
-
 int main() {
-    printf("%lld\n", getEspacoLivre());
-        
-
-
-
-    /* printf("\nm manda r recebe ");
-    char letra;
-
-    scanf("%s", &letra);
-    int soquete = ConexaoRawSocket("enp2s0");
-    int x;
-    char buff[131] = "oloco meu ai nao";
-    
-    if (letra == 'm') {
-        printf("Enviando mensagem\n");
-        send(soquete, buff, 131, 0);
-    } else {
-         do {
-            printf("Recebe\n");
-            x = recv(soquete, buff, 131, 0);
-            puts(buff);
-        } while (x != -1);
-    } */
+    FILE *arq = fopen("objetos/2.mp4", "r");
+    if (!arq) {
+        fprintf(stderr, "Erro ao abrir o arquivo %s\n", "2.mp4");
+        exit(1);
+    }
 }

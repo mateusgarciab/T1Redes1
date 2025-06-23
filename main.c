@@ -40,7 +40,8 @@ void pegaTesouros(tesouro_t *tesouros){
             tesouros[i].tamanho = dados.st_size;
             tesouros[i].achado = false;
             aux = obterExtensao((char *)tesouros[i].nome);
-            switch (aux[1]){
+            puts(aux);
+            switch (aux[0]){
                 case 't':
                     tesouros[i].tipo = 6;
                     break;
@@ -51,6 +52,7 @@ void pegaTesouros(tesouro_t *tesouros){
                     tesouros[i].tipo = 8;
                     break;
             }   
+            printf("%d\n", tesouros[i].tipo);
             tesouros[i].tamNome = strlen((char *)tesouros[i].nome)+1;
             i++;
         } 
@@ -109,7 +111,7 @@ void inicializaCliente(int soquete, unsigned char *mensagem, unsigned char *resp
 
 
 int main(int argc, char *argv[]){
-    int soquete = ConexaoRawSocket("enp2s0");
+    int soquete = ConexaoRawSocket("enp2s0"); // enp4s0
     srand(time(NULL));
     //Cria o soquete
     unsigned char *mensagem = malloc(sizeof(unsigned char)*131);

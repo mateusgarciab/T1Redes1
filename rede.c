@@ -36,7 +36,7 @@ void aguardaMensagem(int soquete, unsigned char *mensagem){
     while (1) {
         do {
             //escuta a rede
-            printf("Agurdando Mensagem\n");
+            /* printf("Agurdando Mensagem\n"); */
             x = recv(soquete, mensagem, TAMBUFF, 0);
         } while (x == -1 || mensagem[0] != MARCADOR_INI);
         if (verificaIntegridade(mensagem)) {
@@ -50,7 +50,7 @@ void aguardaMensagem(int soquete, unsigned char *mensagem){
 }
 
 void enviaMensEsperaResp(int soquete, unsigned char *mensagem, unsigned char *resposta){
-    int timeout = 15; //colocar o tempo inicial
+    int timeout = 20; //colocar o tempo inicial
     int numTimeout = 0;
     bool timeOutFlag = false;
     do {
