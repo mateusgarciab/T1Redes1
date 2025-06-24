@@ -1,6 +1,8 @@
 #include "mensagem.h"
 #include <stdbool.h>
 #include <stdbool.h>
+#include <stdio.h>
+
 
 #define SEQ_INI_MASK 0b00000001
 #define TIPO_MASK 0b00001111
@@ -62,7 +64,8 @@ void checkSum(unsigned char *mensagem){
 int setDados(unsigned char *mensagem, unsigned char *dados, int tam){
     int tamInserido = 0;
     int numPadding = 0;
-    for (int i = 0; (tamInserido < tam) && (i < TAM_MAX_DADOS); i++) {
+    int i;
+    for (i = 0; ((i - numPadding) < tam) && (i < TAM_MAX_DADOS); i++) {
         mensagem[i+4] = dados[i - numPadding];
         tamInserido++;
         if (dados[i - numPadding] == 0x81 || dados[i - numPadding] == 0x88) {
@@ -72,8 +75,27 @@ int setDados(unsigned char *mensagem, unsigned char *dados, int tam){
         }
     }
     if (tam < TAM_MAX_DADOS)
-        tamInserido += numPadding;
-    return tamInserido;
+        i += numPadding;
+    return i - numPadding;
+}
+
+int setDadosAux(unsigned char *mensagem, unsigned char *dados, int tam, FILE *arq){
+    int tamInserido = 0;
+    int numPadding = 0;
+    int i;
+    for (i = 0; ((i - numPadding) < tam) && (i < TAM_MAX_DADOS); i++) {
+        mensagem[i+4] = dados[i - numPadding];
+        fwrite(dados + (i - numPadding), sizeof(unsigned char), 1, arq);
+        tamInserido++;
+        if (dados[i - numPadding] == 0x81 || dados[i - numPadding] == 0x88) {
+            i++;
+            mensagem[i+4] = PADDING;
+            numPadding++;
+        }
+    }
+    if (tam < TAM_MAX_DADOS)
+        i += numPadding;
+    return (i - numPadding);
 }
 
 unsigned char getDados(unsigned char *mensagem, unsigned char *dados){
@@ -81,7 +103,7 @@ unsigned char getDados(unsigned char *mensagem, unsigned char *dados){
     unsigned char numPadding = 0;
     for (unsigned char i = 0; i < tam; i++) {
         dados[i - numPadding] = mensagem[i+4];
-        if (mensagem[i+4] == 0x81 || mensagem[i+4] == 0x88) {
+        if (mensagem[i+4] == 0x81 || mensagem[i+4] == 0x88)  {
             i++;
             numPadding++;
         }
@@ -125,7 +147,7 @@ int montaMensagem(unsigned char *mensagem, int tipo, unsigned char nSeq, void *d
             setTipo(mensagem, tipo);
             checkSum(mensagem);
             break;
-        case TAMANHO: //e em bytes? qual o valor de tam? 4?
+        case TAMANHO:
             setMarcadorIni(mensagem);
             dadosInseridos = setDados(mensagem, (unsigned char *)dados, 8);
             setTam(mensagem, 8);
@@ -148,6 +170,7 @@ int montaMensagem(unsigned char *mensagem, int tipo, unsigned char nSeq, void *d
             break;
         case TEXTO: //Chama passando o tesouro desmembrado em cada campo
             setMarcadorIni(mensagem);
+            printf("texto\n");
             dadosInseridos = setDados(mensagem, dados, tam);
             setTam(mensagem, tam);
             setNSeq(mensagem, nSeq);
@@ -156,6 +179,7 @@ int montaMensagem(unsigned char *mensagem, int tipo, unsigned char nSeq, void *d
             break;
         case VIDEO:
             setMarcadorIni(mensagem);
+            printf("video\n");
             dadosInseridos = setDados(mensagem, dados, tam);
             setTam(mensagem, tam);
             setNSeq(mensagem, nSeq);
@@ -164,6 +188,7 @@ int montaMensagem(unsigned char *mensagem, int tipo, unsigned char nSeq, void *d
             break;
         case IMAGEM:
             setMarcadorIni(mensagem);
+            printf("imagem\n");
             dadosInseridos = setDados(mensagem, dados, tam);
             setTam(mensagem, tam);
             setNSeq(mensagem, nSeq);

@@ -17,6 +17,7 @@ mapa_t *geraMapa(tesouro_t *tesouros){
         for (unsigned char j = 0; j < 8; j++) {
             m->mapa[i][j].linha = i;
             m->mapa[i][j].coluna = j;
+            m->mapa[i][j].t = NULL;
             if (i == 0){
                 m->mapa[i][j].down = NULL;
             }else{
@@ -47,6 +48,7 @@ mapa_t *geraMapa(tesouro_t *tesouros){
             k = rand() % 8;
         } while (m->mapa[j][k].t != NULL);
         m->mapa[j][k].t = &tesouros[i];
+        printf("[%d] [%d] %ld - %s %d %d %lld\n", j, k, m->mapa[j][k].t, m->mapa[j][k].t->nome, m->mapa[j][k].t->tamNome, m->mapa[j][k].t->tipo, m->mapa[j][k].t->tamanho);
     }
     m->tesourosRestantes = 8;
     //Posiciona o jogador em uma posicao aleatoria no mapa

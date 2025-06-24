@@ -3,6 +3,8 @@
 
 #include "mapa.h"
 
+char *concatenaNomeTesouro(tesouro_t *t);
+
 void sEnvia(int soquete, tesouro_t *t, unsigned char *mensagem, unsigned char *resposta);
 
 void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *resposta);

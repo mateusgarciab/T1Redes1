@@ -88,6 +88,7 @@
 #define MENSAGEM_H
 
 #include <stdbool.h>
+#include <stdio.h>
 
 #define MARCADOR_INI 0b01111110
 
@@ -170,6 +171,8 @@ unsigned char getDados(unsigned char *mensagem, unsigned char *dados);
  * inseridos), caso contrario retorna o numero de bytes de dados que foram
  * copiados */
 int setDados(unsigned char *mensagem, unsigned char *dados, int tam);
+
+int setDadosAux(unsigned char *mensagem, unsigned char *dados, int tam, FILE *arq);
 
 /* Recebe um ponteiro mensagem para um vetor unsigned char de 131 bytes, um int
  * tipo, um unsigned char nSeq, um ponteiro generico dados e um unsigned char

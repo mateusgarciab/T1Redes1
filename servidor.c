@@ -35,11 +35,13 @@ void sEnvia(int soquete, tesouro_t *t, unsigned char *mensagem, unsigned char *r
         nSeq = (nSeq +1) % 32;
         enviaMensEsperaResp(soquete, mensagem, resposta);
     }
+    printf("%lld\n", t->tamanho);
     montaMensagem(mensagem, TAMANHO, nSeq, (unsigned char *)&t->tamanho, 8);
+    
     nSeq = (nSeq +1) % 32;
     enviaMensEsperaResp(soquete, mensagem, resposta);
     if (getTipo(resposta) == ERRO) {
-        getDados(mensagem, dados);
+        getDados(resposta, dados);
         if (dados[0]) {
             fprintf(stderr, "Espaço insuficiente para transferencia, encerrando programa\n");
             fclose(arq);
@@ -49,14 +51,19 @@ void sEnvia(int soquete, tesouro_t *t, unsigned char *mensagem, unsigned char *r
         fclose(arq);
         exit(1);
     }
+    FILE *arqaux = fopen("Teste.jpg", "w+");
     while ((i = fread(dados, sizeof(char), 126, arq))) {
         aux = montaMensagem(mensagem, DADOS, nSeq, dados, i);
+        setDadosAux(mensagem, dados, i, arqaux);
+        //unsigned char aux1 = getDados(mensagem, dados);
+        //fwrite(dados, sizeof(unsigned char), aux1, arqaux);
         if (aux < i) {
-            fseek(arq, -(i - aux), SEEK_CUR);
+            fseek(arq, (aux - i), SEEK_CUR);
         }
         nSeq = (nSeq + 1) % 32;
         enviaMensEsperaResp(soquete, mensagem, resposta);
     }
+    fclose(arqaux);
     free(dados);
     fclose(arq);
 }

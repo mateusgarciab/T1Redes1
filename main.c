@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <time.h>
+#include "mensagem.h"
 #include "mapa.h"
 #include "servidor.h"
 #include "cliente.h"
@@ -36,8 +37,13 @@ void pegaTesouros(tesouro_t *tesouros){
         if (arquivo->d_name[0] != '.') {
             tesouros[i].nome = (unsigned char *)strdup(arquivo->d_name);
             puts(tesouros[i].nome);
-            stat((char *)tesouros[i].nome, &dados);
+            char *aux;
+            if(stat(aux = concatenaNomeTesouro(&tesouros[i]), &dados) != 0) 
+                exit(1);
             tesouros[i].tamanho = dados.st_size;
+            free(aux);
+            
+            printf("--%lld\n", tesouros[i].tamanho);
             tesouros[i].achado = false;
             aux = obterExtensao((char *)tesouros[i].nome);
             puts(aux);
@@ -68,6 +74,9 @@ void iniciaServidor(int soquete, unsigned char *mensagem, unsigned char *respost
     }
     pegaTesouros(tesouros);
     printf("Tesouro pegos\n");
+    for (int i = 0; i < 8; i++)
+        montaMensagem(resposta, tesouros[i].tipo, 0, tesouros[i].nome, tesouros[i].tamNome);
+    printf("Aqui\n");
     mapa_t *mapa = geraMapa(tesouros);
     printf("Mapa gerado\n");
     if (!mapa) {
@@ -111,7 +120,7 @@ void inicializaCliente(int soquete, unsigned char *mensagem, unsigned char *resp
 
 
 int main(int argc, char *argv[]){
-    int soquete = ConexaoRawSocket("enp2s0"); // enp4s0
+    int soquete = ConexaoRawSocket("eth0"); // enp4s0
     srand(time(NULL));
     //Cria o soquete
     unsigned char *mensagem = malloc(sizeof(unsigned char)*131);
