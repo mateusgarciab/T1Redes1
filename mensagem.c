@@ -79,6 +79,38 @@ int setDados(unsigned char *mensagem, unsigned char *dados, int tam){
     return i - numPadding;
 }
 
+/* int setDados(unsigned char *mensagem, const unsigned char *dados, int tam) {
+    int i = 0; // Índice para os dados de entrada
+    int j = 4; // Índice para a mensagem (começa após o cabeçalho de 4 bytes)
+
+    while (i < tam && j < TAM_MAX_DADOS + 4) {
+        mensagem[j++] = dados[i];
+        if (dados[i] == 0x81 || dados[i] == 0x88) {
+            if (j >= TAM_MAX_DADOS + 4) break; // Evita ultrapassar o limite
+            mensagem[j++] = 0x00; // Byte de padding
+        }
+        i++;
+    }
+
+    return j - 4; // Retorna o número total de bytes inseridos (excluindo o cabeçalho)
+} */
+
+
+/* int getDados(const unsigned char *mensagem, unsigned char *dados) {
+    int i = 4; // Índice para a mensagem (começa após o cabeçalho de 4 bytes)
+    int j = 0; // Índice para os dados de saída
+
+    while (i < TAM_MAX_DADOS + 4) {
+        unsigned char byte = mensagem[i++];
+        dados[j++] = byte;
+        if ((byte == 0x81 || byte == 0x88) && i < TAM_MAX_DADOS + 4) {
+            i++; // Pula o byte de padding
+        }
+    }
+
+    return j; // Retorna o número total de bytes recuperados
+} */
+
 int setDadosAux(unsigned char *mensagem, unsigned char *dados, int tam, FILE *arq){
     int tamInserido = 0;
     int numPadding = 0;
