@@ -96,20 +96,6 @@ int setDados(unsigned char *mensagem, unsigned char *dados, int tam){
 } */
 
 
-/* int getDados(const unsigned char *mensagem, unsigned char *dados) {
-    int i = 4; // Índice para a mensagem (começa após o cabeçalho de 4 bytes)
-    int j = 0; // Índice para os dados de saída
-
-    while (i < TAM_MAX_DADOS + 4) {
-        unsigned char byte = mensagem[i++];
-        dados[j++] = byte;
-        if ((byte == 0x81 || byte == 0x88) && i < TAM_MAX_DADOS + 4) {
-            i++; // Pula o byte de padding
-        }
-    }
-
-    return j; // Retorna o número total de bytes recuperados
-} */
 
 int setDadosAux(unsigned char *mensagem, unsigned char *dados, int tam, FILE *arq){
     int tamInserido = 0;
@@ -129,6 +115,21 @@ int setDadosAux(unsigned char *mensagem, unsigned char *dados, int tam, FILE *ar
         i += numPadding;
     return (i - numPadding);
 }
+
+/* int getDados(const unsigned char *mensagem, unsigned char *dados) {
+    int i = 4; // Índice para a mensagem (começa após o cabeçalho de 4 bytes)
+    int j = 0; // Índice para os dados de saída
+
+    while (i < TAM_MAX_DADOS + 4) {
+        unsigned char byte = mensagem[i++];
+        dados[j++] = byte;
+        if ((byte == 0x81 || byte == 0x88) && i < TAM_MAX_DADOS + 4) {
+            i++; // Pula o byte de padding
+        }
+    }
+
+    return j; // Retorna o número total de bytes recuperados
+} */
 
 unsigned char getDados(unsigned char *mensagem, unsigned char *dados){
     unsigned char tam = getTam(mensagem);
