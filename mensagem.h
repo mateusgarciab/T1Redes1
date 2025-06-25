@@ -172,8 +172,6 @@ unsigned char getDados(unsigned char *mensagem, unsigned char *dados);
  * copiados */
 int setDados(unsigned char *mensagem, unsigned char *dados, int tam);
 
-int setDadosAux(unsigned char *mensagem, unsigned char *dados, int tam, FILE *arq);
-
 /* Recebe um ponteiro mensagem para um vetor unsigned char de 131 bytes, um int
  * tipo, um unsigned char nSeq, um ponteiro generico dados e um unsigned char
  * tam seguindo o template e as definicoes feitas no inicio desse arquivo e com
