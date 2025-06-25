@@ -14,19 +14,15 @@
 
 bool aguardaResposta(int soquete, unsigned char *resposta, int timeout){
     int x = 0;
-    //seta o tempo de timeout sendo o tempo recebido
     const int timeoutMillis = timeout;
     struct timeval timeOut = { .tv_sec = timeoutMillis / 1000, .tv_usec = (timeoutMillis % 1000) * 1000};
     setsockopt(soquete, SOL_SOCKET, SO_RCVTIMEO, (char*) &timeOut, sizeof(timeOut));
     
     do {
-        //escutar a rede passando resposta
-        printf("Agurdando Resposta\n");
         x = recv(soquete, resposta, TAMBUFF, 0);
     } while (x != -1 && resposta[0] != MARCADOR_INI);
     if (x == -1)
         return true;
-    printf("Recebido %d\n", getTipo(resposta));
     return false;
 }
 
@@ -35,16 +31,11 @@ void aguardaMensagem(int soquete, unsigned char *mensagem){
     int x = 0;
     while (1) {
         do {
-            //escuta a rede
-            /* printf("Agurdando Mensagem\n"); */
             x = recv(soquete, mensagem, TAMBUFF, 0);
         } while (x == -1 || mensagem[0] != MARCADOR_INI);
-        if (verificaIntegridade(mensagem)) {
-            printf("Recebido %d\n", getTipo(mensagem));
+        if (verificaIntegridade(mensagem))
             return;
-        }
         montaMensagem(mensagem, NACK, nSeqAux, NULL, 0);
-        //envia mensagem
         send(soquete, mensagem, TAMBUFF, 0);
     }
 }
@@ -54,9 +45,9 @@ void enviaMensEsperaResp(int soquete, unsigned char *mensagem, unsigned char *re
     int numTimeout = 0;
     bool timeOutFlag = false;
     do {
-        //envia mensagem
-        printf("Enviando mensagem %d\n", getTipo(mensagem));
         send(soquete, mensagem, TAMBUFF, 0);
+        if (getTipo(mensagem) == END_GAME)
+            return;
         timeOutFlag = aguardaResposta(soquete, resposta, timeout);
         if (timeOutFlag) {
             numTimeout++;
@@ -64,14 +55,11 @@ void enviaMensEsperaResp(int soquete, unsigned char *mensagem, unsigned char *re
         }
     } while (numTimeout < 15 && (timeOutFlag || !verificaIntegridade(resposta) || getTipo(resposta) == NACK));
     if (numTimeout == 15) {
-        //erro, nao conseguiu resposta do outro lado termina o programa
         exit(1);
     }
 }
 
 void enviaRespEsperaMens(int soquete, unsigned char *mensagem, unsigned char *resposta){
-    //envia resposta
-    printf("enviando Resposta e espera msg \n");
     send(soquete, resposta, TAMBUFF, 0);
     aguardaMensagem(soquete, mensagem);
 }
@@ -79,5 +67,5 @@ void enviaRespEsperaMens(int soquete, unsigned char *mensagem, unsigned char *re
 void trocaPapeis(int soquete, unsigned char *mensagem, unsigned char *resposta){
     do {
         enviaMensEsperaResp(soquete, resposta, mensagem);
-    } while (getTipo(mensagem) != ACK);
+    } while (getTipo(mensagem) != ACK && getTipo(resposta) != END_GAME);
 }

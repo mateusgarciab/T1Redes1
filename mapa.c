@@ -48,7 +48,7 @@ mapa_t *geraMapa(tesouro_t *tesouros){
             k = rand() % 8;
         } while (m->mapa[j][k].t != NULL);
         m->mapa[j][k].t = &tesouros[i];
-        printf("[%d] [%d] %ld - %s %d %d %lld\n", j, k, m->mapa[j][k].t, m->mapa[j][k].t->nome, m->mapa[j][k].t->tamNome, m->mapa[j][k].t->tipo, m->mapa[j][k].t->tamanho);
+        printf("[%d] [%d] - %s %lld\n", j, k, m->mapa[j][k].t->nome, m->mapa[j][k].t->tamanho);
     }
     m->tesourosRestantes = 8;
     //Posiciona o jogador em uma posicao aleatoria no mapa
@@ -63,7 +63,7 @@ bool moveUp(mapa_t *M){
     M->posAtual = M->posAtual->up;
     printf("[%d, %d]", (int) M->posAtual->linha, (int) M->posAtual->coluna);
     if (M->posAtual->t)
-        printf("\tTesouro");
+        printf("\tTesouro - %s", M->posAtual->t->nome);
     printf("\n");
     return true;
 }
@@ -74,7 +74,7 @@ bool moveDown(mapa_t *M){
     M->posAtual = M->posAtual->down;
     printf("[%d, %d]", (int) M->posAtual->linha, (int) M->posAtual->coluna);
     if (M->posAtual->t)
-        printf("\tTesouro");
+        printf("\tTesouro - %s", M->posAtual->t->nome);
     printf("\n");
     return true;
 }
@@ -85,7 +85,7 @@ bool moveLeft(mapa_t *M){
     M->posAtual = M->posAtual->left;
     printf("[%d, %d]", (int) M->posAtual->linha, (int) M->posAtual->coluna);
     if (M->posAtual->t)
-        printf("\tTesouro");
+        printf("\tTesouro - %s", M->posAtual->t->nome);
     printf("\n");
     return true;
 }
@@ -96,7 +96,7 @@ bool moveRight(mapa_t *M){
     M->posAtual = M->posAtual->right;
     printf("[%d, %d]", (int) M->posAtual->linha, (int) M->posAtual->coluna);
     if (M->posAtual->t)
-        printf("\tTesouro");
+        printf("\tTesouro - %s", M->posAtual->t->nome);
     printf("\n");
     return true;
 }
@@ -163,7 +163,7 @@ void moveImgRight(img_mapa_t *mapa, bool flag){
 }
 
 void imprimeImgMapa(img_mapa_t *mapa){
-    printf("|-----------------|\n");
+    printf("+-----------------+\n");
     for (int i = 56; i >= 0; i-=8) {
         printf("| ");
         printf("%c %c %c %c %c %c %c %c ", mapa->pos[i], mapa->pos[i+1],
@@ -171,5 +171,5 @@ void imprimeImgMapa(img_mapa_t *mapa){
                 mapa->pos[i+6], mapa->pos[i+7]);
         printf("|\n");
     }
-    printf("|-----------------|\n");
+    printf("+-----------------+\n");
 }

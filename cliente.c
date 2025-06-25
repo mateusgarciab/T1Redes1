@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include <sys/statvfs.h>
 #include "cliente.h"
 #include "mensagem.h"
 #include "mapa.h"
 #include "rede.h"
-
-#include <string.h>
-#include <sys/statvfs.h>
 
 
 
@@ -17,7 +16,6 @@ int cEnvia(int soquete, img_mapa_t *m, unsigned char *mensagem, unsigned char *r
     bool temTesouro = false;
     unsigned char nSeq = (getNSeq(mensagem) + 1) % 32;
     while (flag) {
-        printf("Mapa cEnvia\n");
         imprimeImgMapa(m);
         scanf("%s", escolha);
         switch (escolha[0]) {
@@ -38,10 +36,8 @@ int cEnvia(int soquete, img_mapa_t *m, unsigned char *mensagem, unsigned char *r
         }
         nSeq = (nSeq + 1) % 32;
         enviaMensEsperaResp(soquete, mensagem, resposta);
-        if (getTipo(resposta) == ACK) {
-            printf("Aqui Ack\n"); 
+        if (getTipo(resposta) == ACK)
             continue;
-        }
         if (getTipo(resposta) == TEXTO || getTipo(resposta) == VIDEO ||
             getTipo(resposta) == IMAGEM){
             temTesouro = true;
@@ -70,7 +66,6 @@ void executaArq(unsigned char *nome) {
     comando[0] = '\0';
     strcat(comando, "xdg-open ");
     strcat(comando, (char*)nome);
-    printf("%s\n", comando);
     system(comando);
 }
 
@@ -89,7 +84,6 @@ bool cRecebe(int soquete, unsigned char *mensagem, unsigned char *resposta){
     unsigned long long int espacoLivre = getEspacoLivre();
     unsigned char nSeqAux = 32;
     do {
-        printf("CRecebe %d\n", getTipo(mensagem));
         switch (getTipo(mensagem)) {
             case START_GAME:
                 montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
@@ -151,7 +145,6 @@ void rodaCliente(int soquete, img_mapa_t *m, unsigned char *mensagem, unsigned c
     unsigned char nSeq = 0;
     unsigned char *dados = malloc(sizeof(unsigned char)*127);
     montaMensagem(mensagem, START_GAME, nSeq, NULL, 0);
-    printf("Enviando mensagem de tipo %d\n", getTipo(mensagem));
     enviaMensEsperaResp(soquete, mensagem, resposta);
     getDados(resposta, dados);
     if (setPosInic(m, dados[0], dados[1], dados[2]))
@@ -159,15 +152,14 @@ void rodaCliente(int soquete, img_mapa_t *m, unsigned char *mensagem, unsigned c
     free(dados);
     while (rodando) {
         if (flag){
-            printf("If\n");
             flag = cEnvia(soquete, m, mensagem, resposta);
             continue;
         } else {
-            printf("Else\n");
             imprimeImgMapa(m);
             printf("Tesouro achado, aguardando transferencia\n");
             rodando = cRecebe(soquete, resposta, mensagem);
             flag = 1;
         }
     }
+    printf("Todos os tesouros foram achados! Fim de Jogo.\n");
 }

@@ -18,24 +18,18 @@ char *concatenaNomeTesouro(tesouro_t *t) {
 
 void sEnvia(int soquete, tesouro_t *t, unsigned char *mensagem, unsigned char *resposta){
     size_t i, aux;
-    //entra no diretorio que contem os arquivos e abre o certo, t->nome so tem o nome do arquivo
-    //ou no main quando pegou os nomes dos arquivos ja fica dentro do diretorio onde eles tao
-    printf("%s\n", t->nome);
     FILE *arq = fopen(concatenaNomeTesouro(t), "r");
     if (!arq) {
         fprintf(stderr, "Erro ao abrir o arquivo %s\n", t->nome);
         exit(1);
     }
-    printf("Arquivo aberto\n");
     unsigned char nSeq = (getNSeq(mensagem) + 1) % 32;
     unsigned char *dados = malloc(sizeof(unsigned char)*127);
     if (getTipo(resposta) == START_GAME) {
-        printf("*************************************************************** %d\n", t->tipo);
         montaMensagem(mensagem, t->tipo, nSeq, t->nome, t->tamNome);
         nSeq = (nSeq +1) % 32;
         enviaMensEsperaResp(soquete, mensagem, resposta);
     }
-    printf("%lld\n", t->tamanho);
     montaMensagem(mensagem, TAMANHO, nSeq, (unsigned char *)&t->tamanho, 8);
     
     nSeq = (nSeq +1) % 32;
@@ -51,19 +45,14 @@ void sEnvia(int soquete, tesouro_t *t, unsigned char *mensagem, unsigned char *r
         fclose(arq);
         exit(1);
     }
-    FILE *arqaux = fopen("Teste.jpg", "w+");
     while ((i = fread(dados, sizeof(char), 126, arq))) {
         aux = montaMensagem(mensagem, DADOS, nSeq, dados, i);
-        setDadosAux(mensagem, dados, i, arqaux);
-        //unsigned char aux1 = getDados(mensagem, dados);
-        //fwrite(dados, sizeof(unsigned char), aux1, arqaux);
         if (aux < i) {
             fseek(arq, (aux - i), SEEK_CUR);
         }
         nSeq = (nSeq + 1) % 32;
         enviaMensEsperaResp(soquete, mensagem, resposta);
     }
-    fclose(arqaux);
     free(dados);
     fclose(arq);
 }
@@ -77,10 +66,8 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
         aguardaMensagem(soquete, mensagem);
     }
     while (1) {
-        printf("Recebeu mensagem %d\n", getTipo(mensagem));
         switch (getTipo(mensagem)) {
             case ACK:
-                printf("Ack crecebe\n");
                 montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
                 break;
             case START_GAME:
@@ -96,7 +83,6 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
                 break;
             case MOV_RIGHT:
                 if (!moveRight(M)) {
-                    printf("Sera qu é aqui, !mov");
                     montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
                     break;
                 }
@@ -110,7 +96,6 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
                 break;
             case MOV_UP:
                 if (!moveUp(M)) {
-                    printf("Sera qu é aqui, !mov");
                     montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
                     break;
                 }
@@ -124,7 +109,6 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
                 break;
             case MOV_DOWN:
                 if (!moveDown(M)) {
-                    printf("Sera qu é aqui, !mov");
                     montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
                     break;
                 }
@@ -138,7 +122,6 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
                 break;
             case MOV_LEFT:
                 if (!moveLeft(M)) {
-                    printf("Sera qu é aqui, !mov");
                     montaMensagem(resposta, ACK, getNSeq(mensagem), NULL, 0);
                     break;
                 }
@@ -157,7 +140,6 @@ void sRecebe(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char *res
             return;
         }
         numSeqAux = getNSeq(mensagem);
-        printf("Enviando resposta %d\n", getTipo(resposta));
         do {
             enviaRespEsperaMens(soquete, mensagem, resposta);
         } while (getNSeq(mensagem) == numSeqAux);
@@ -168,11 +150,10 @@ void rodaServidor(int soquete, mapa_t *M, unsigned char *mensagem, unsigned char
     bool rodando = true;
     printf("[%d, %d]", (int) M->posAtual->linha, (int) M->posAtual->coluna);
     if (M->posAtual->t)
-        printf("\tTesouro");
+        printf("\tTesouro - %s", M->posAtual->t->nome);
     printf("\n");
     while (rodando) {
         sRecebe(soquete, M, mensagem, resposta);
-        printf("Server recebeu e vai mandar \n");
         sEnvia(soquete, M->posAtual->t, mensagem, resposta);
         M->tesourosRestantes--;
         if (M->tesourosRestantes) {

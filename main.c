@@ -4,15 +4,15 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <time.h>
+#include <dirent.h>
+#include <string.h>
 #include "mensagem.h"
 #include "mapa.h"
 #include "servidor.h"
 #include "cliente.h"
-
-#include <dirent.h>
-#include <string.h>
-#define OBJETOS "objetos\0" 
 #include "ConexaoRawSocket.h"
+
+
 
 char* obterExtensao(char* nomeArquivo) {
     char* ponto = strrchr(nomeArquivo, '.'); // Encontra o último ponto
@@ -32,21 +32,16 @@ void pegaTesouros(tesouro_t *tesouros){
         exit(1);
     }
     int i = 0; 
-    char *aux;
     while ((arquivo = readdir(dir)) != NULL) {
         if (arquivo->d_name[0] != '.') {
             tesouros[i].nome = (unsigned char *)strdup(arquivo->d_name);
-            puts(tesouros[i].nome);
             char *aux;
             if(stat(aux = concatenaNomeTesouro(&tesouros[i]), &dados) != 0) 
                 exit(1);
             tesouros[i].tamanho = dados.st_size;
             free(aux);
-            
-            printf("--%lld\n", tesouros[i].tamanho);
             tesouros[i].achado = false;
             aux = obterExtensao((char *)tesouros[i].nome);
-            puts(aux);
             switch (aux[0]){
                 case 't':
                     tesouros[i].tipo = 6;
@@ -57,8 +52,7 @@ void pegaTesouros(tesouro_t *tesouros){
                 case 'j':
                     tesouros[i].tipo = 8;
                     break;
-            }   
-            printf("%d\n", tesouros[i].tipo);
+            }
             tesouros[i].tamNome = strlen((char *)tesouros[i].nome)+1;
             i++;
         } 
@@ -73,12 +67,7 @@ void iniciaServidor(int soquete, unsigned char *mensagem, unsigned char *respost
         exit(1);
     }
     pegaTesouros(tesouros);
-    printf("Tesouro pegos\n");
-    for (int i = 0; i < 8; i++)
-        montaMensagem(resposta, tesouros[i].tipo, 0, tesouros[i].nome, tesouros[i].tamNome);
-    printf("Aqui\n");
     mapa_t *mapa = geraMapa(tesouros);
-    printf("Mapa gerado\n");
     if (!mapa) {
         fprintf(stderr, "Erro ao carregar mapa, encerrando\n");
         exit(1);
@@ -101,7 +90,7 @@ void inicializaCliente(int soquete, unsigned char *mensagem, unsigned char *resp
     printf(" 'o' e não 'F'\n");
     printf("'.' indicam posições não passadas\n");
     printf("Exemplo grafico:\n\n");
-    printf("|-----------------|\n");
+    printf("+-----------------+\n");
     printf("| * * F . . . . . |\n");
     printf("| o * . . . . . . |\n");
     printf("| . * . . . . . . |\n");
@@ -110,7 +99,7 @@ void inicializaCliente(int soquete, unsigned char *mensagem, unsigned char *resp
     printf("| . . o . . . . . |\n");
     printf("| . * * . . . . . |\n");
     printf("| . . . . . . . . |\n");
-    printf("|-----------------|\n");
+    printf("+-----------------+\n");
     printf("Pressione qualquer tecla para começar: ");
     scanf("%1c", &inicio);
     rodaCliente(soquete, mapa, mensagem, resposta);
@@ -120,9 +109,8 @@ void inicializaCliente(int soquete, unsigned char *mensagem, unsigned char *resp
 
 
 int main(int argc, char *argv[]){
-    int soquete = ConexaoRawSocket("eth0"); // enp4s0
+    int soquete = ConexaoRawSocket("eth0");
     srand(time(NULL));
-    //Cria o soquete
     unsigned char *mensagem = malloc(sizeof(unsigned char)*131);
     unsigned char *resposta = malloc(sizeof(unsigned char)*131);
     if (!mensagem || !resposta) {
