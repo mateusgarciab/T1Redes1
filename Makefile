@@ -1,5 +1,5 @@
 CC      = gcc
-CFLAGS  = -Wall
+CFLAGS  =
 LDFLAGS = -lm
 
 	objects = ConexaoRawSocket.o mensagem.o rede.o mapa.o cliente.o servidor.o

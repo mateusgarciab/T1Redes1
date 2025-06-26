@@ -41,12 +41,12 @@
  *    3 - START_GAME:
  *          Cliente - Envia vazia para iniciar o jogo
  *
- *          Servidor - Envia com a posição inical do jogador e uma flag
+ *          Servidor - Envia com a posição inicial do jogador e uma flag
  *                     indicando se tem tesouro nessa posição, em resposta
  *                     a uma mensagem do tipo 3 recebida
  *
  *    4 - TAMANHO:
- *          Mensagem que contém o tamnho em bytes de um arquivo
+ *          Mensagem que contém o tamanho em bytes de um arquivo
  *  
  *    5 - DADOS:
  *          Mensagem que contém dados de algum arquivo
@@ -58,7 +58,7 @@
  *          OK + Mensagem contém o nome de um arquivo .mp4
  *
  *    8 - IMAGEM:
- *          Ok + Mensagem contémo nome de um arquivo .jpg
+ *          Ok + Mensagem contém o nome de um arquivo .jpg
  *
  *    9 - FIM_ARQ:
  *          Mensagem sinaliza que o arquivo que estava sendo enviado acabou
@@ -80,7 +80,7 @@
  *
  *    15 - ERRO:
  *          Contém um código que indica o erro,
- *          0 indica a fata de permissão
+ *          0 indica a falta de permissão
  *          1 indica espaço insuficiente
  */
 

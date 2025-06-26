@@ -1,4 +1,4 @@
-#include "stdlib.h" //n é <> ?
+#include "stdlib.h"
 #include <stdbool.h>
 #include "mensagem.h"
 #include "rede.h"
@@ -41,7 +41,7 @@ void aguardaMensagem(int soquete, unsigned char *mensagem){
 }
 
 void enviaMensEsperaResp(int soquete, unsigned char *mensagem, unsigned char *resposta){
-    int timeout = 20; //colocar o tempo inicial
+    int timeout = 20; // tempo inicial
     int numTimeout = 0;
     bool timeOutFlag = false;
     do {
